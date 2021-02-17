@@ -22,8 +22,9 @@ python3 main.py DomainName.com # Searches for the selected domain and TLD.
 
 # Todo
 - Add Commenting.
+- Logging to File.
 - Possibile Optimizations.
-- - Scrap all prices from same page?
+- - Scrape all prices from same page?
 - Django Application
 - - Dashboard with approval, sends user to checkout page?
 - - Stores within a Database, constantly running in the background using Docker.
