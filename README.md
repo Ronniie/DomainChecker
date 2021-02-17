@@ -12,12 +12,18 @@ virtualenv venv --python=python3
 pip3 install -r requirements.txt
 python3 main.py
 ```
+## How to use:
+Any of these commands works!
+```
+python3 main.py # Loops through random words, and shows the selected TLDs. 
+python3 main.py DomainName # Loops through selected TLDs.
+python3 main.py DomainName.com # Searches for the selected domain and TLD.
+```
 
 # Todo
 - Add Commenting.
 - Possibile Optimizations.
 - - Scrap all prices from same page?
-- Add Commands, "python3 main.py checkthisdomain.com"
 - Django Application
 - - Dashboard with approval, sends user to checkout page?
 - - Stores within a Database, constantly running in the background using Docker.
