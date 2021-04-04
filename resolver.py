@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+
 import settings
 import time
 
@@ -17,9 +19,9 @@ class Resolver:
     def exists(self):
         try:
             self.driver.find_elements_by_xpath(
-                '//*[@id="search-results"]/article[1]/div[2]/strong')[0].text
+                '//*[@id="react-nc-search"]/div/div/section/article/div[1]/h2')[0].text
             return True
-        except Exception: # Will update this to fit a certain Exception.
+        except NoSuchElementException: # Will update this to fit a certain Exception.
             return False
 
     def premium(self):
@@ -27,16 +29,27 @@ class Resolver:
             if self.driver.find_element_by_xpath(
                     '//*[@id="react-nc-search"]/div/div[1]/section/article/div[1]/span').text == "PREMIUM":  # noqa: E501
                 return True
-        except Exception: # Will update this to fit a certain Exception.
+        except NoSuchElementException: # Will update this to fit a certain Exception.
             return False
+
+    def logging(self, status="unavailable", price=None):
+        if status == "available":
+            return f"{settings.colors.SUCCESS}Domain ({self.domain}) is available for {price}!{settings.colors.WHITE}"  # noqa: E501
+        elif status == "premium":
+            return f"{settings.colors.WARNING}Premium Domain ({self.domain}) is available for {price}!{settings.colors.WHITE}"  # noqa: E501
+        elif status == "unavailable":
+            return f"{settings.colors.FAIL}Domain ({self.domain}) is unavailable.{settings.colors.WHITE}"  # noqa: E501
 
     def price(self):
         if self.exists():
-            price = self.driver.find_element_by_xpath(
-                '//*[@id="search-results"]/article[1]/div[2]/strong').text
-            if self.premium():
-                return f"{settings.colors.WARNING}Premium Domain ({self.domain}) is available for {price}!{settings.colors.WHITE}"  # noqa: E501
-            else:
-                return f"{settings.colors.SUCCESS}Domain ({self.domain}) is available for {price}!{settings.colors.WHITE}"  # noqa: E501
+            try:
+                price = self.driver.find_element_by_xpath(
+                    '//*[@id="react-nc-search"]/div/div/section/article/div[2]/strong').text
+                if self.premium():
+                    return self.logging(status="premium", price=price)
+                else:
+                    return self.logging(status="available", price=price)
+            except NoSuchElementException:
+                return self.logging()
         else:
-            return f"{settings.colors.FAIL}Domain ({self.domain}) is unavailable.{settings.colors.WHITE}"  # noqa: E501
+            return self.logging()
